@@ -4,6 +4,8 @@ import re
 import mechanize
 
 br, r = None, None
+
+# Funciones para debugear
 def print_r_data():
 	global br, r
 	print(br.title())
@@ -41,6 +43,7 @@ def print_links_php():
 			print (link.url, end=' | ')
 	print()
 
+# Abrir el login del router
 br = mechanize.Browser()
 br.set_handle_robots(False)   # ignore robots
 br.set_handle_refresh(False)  # can sometimes hang without this
@@ -49,6 +52,7 @@ r = br.open("http://192.168.0.1")
 print(r.geturl())
 #print_forms()
 
+# Postear credenciales
 br.form = list(br.forms())[0]  # use when form is unnamed
 br["username_login"] = 'admin'
 br["password_login"] = 'cisco'
@@ -56,6 +60,7 @@ print('Ingresando credenciales... ', end='', flush=True)
 r = br.submit()
 print(r.geturl())
 
+# Todo este código lo usé para ir viendo los links disponibles
 '''print('Llendo a página principal... ', end='', flush=True)
 r = br.open("http://192.168.0.1")
 print(r.geturl())
@@ -75,6 +80,8 @@ print('Llendo a config AppGaming... ', end='', flush=True)
 r = br.follow_link(url_regex=re.compile("AppGaming"))
 print(r.geturl())
 #print_forms()'''
+
+# Pero ya conocí el link así que voy directo
 r = br.open("http://192.168.0.1/AppGaming.php")
 print(r.geturl())
 
@@ -101,11 +108,13 @@ this_forward = None
 forward_id = None
 forward_id_last = None
 
+# Scrapeamos el form de port fowards
 br.form = list(br.forms())[0]
 for control in br.form.controls:
 	if not control.name:
 		continue
 		
+	# Todos los controles de un mismo forward teminan en NN
 	forward_id = re.search('\d+', control.name)[0]
 	control_value = br[control.name]
 	
@@ -125,6 +134,7 @@ for control in br.form.controls:
 		elif 'Enable' in control.name:
 			this_forward.enabled = control_value[0] if len(control_value) else None
 
+# Imprimimos ordenadamente
 for f in forwards:
 	print(f'Forward #{f.num_id:2}: {f.proto} :{f.portstart:5} > L.A.N.{f.address} {f.enabled or "off"}')
 
