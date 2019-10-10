@@ -1,6 +1,8 @@
 - `source create-venv.sh` para crear python venv e instalar mechanize en venv
 - `python3 main.py` para ejecutar
 
+Por ahora solo lista la tabla de port forwards:
+
 ![alt text](https://raw.githubusercontent.com/wencha/mechanize1/master/captura.png)
 
 Solo sirve para routers con interface como el Technicolor DPC3848VE:
